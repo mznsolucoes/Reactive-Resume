@@ -38,7 +38,7 @@ export const ListView = () => {
       {resumes && (
         <AnimatePresence>
           {resumes
-            .sort((a, b) => sortByDate(a, b, "updatedAt"))
+            .sort((a, b) => (b.title > a.title ? -1 : 1))
             .map((resume, index) => (
               <motion.div
                 key={resume.id}

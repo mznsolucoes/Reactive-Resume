@@ -63,7 +63,8 @@ export class ResumeService {
   }
 
   async import(userId: string, importResumeDto: ImportResumeDto) {
-    const randomTitle = generateRandomName();
+    // const randomTitle = generateRandomName();
+    const randomTitle = importResumeDto.data.basics.name || generateRandomName();
 
     const resume = await this.prisma.resume.create({
       data: {
@@ -84,7 +85,7 @@ export class ResumeService {
   }
 
   findAll(userId: string) {
-    return this.prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } });
+    return this.prisma.resume.findMany({ where: { userId }, orderBy: { title: "asc" } });
   }
 
   findOne(id: string, userId?: string) {
@@ -136,12 +137,9 @@ export class ResumeService {
         where: { userId_id: { userId, id } },
       });
 
-      // await Promise.all([
-      //   this.redis.set(`user:${userId}:resume:${id}`, JSON.stringify(resume)),
-      //   this.redis.del(`user:${userId}:resumes`),
-      //   this.redis.del(`user:${userId}:storage:resumes:${id}`),
-      //   this.redis.del(`user:${userId}:storage:previews:${id}`),
-      // ]);
+      this.storageService.deleteObject(userId, "resumes", id);
+      this.storageService.deleteObject(userId, "previews", id);
+      this.storageService.deleteObject(userId, "pictures", id);
 
       return resume;
     } catch (error) {
@@ -158,10 +156,7 @@ export class ResumeService {
       where: { userId_id: { userId, id } },
     });
 
-    // await Promise.all([
-    //   this.redis.set(`user:${userId}:resume:${id}`, JSON.stringify(resume)),
-    //   this.redis.del(`user:${userId}:resumes`),
-    // ]);
+    this.storageService.deleteObject(userId, "resumes", id);
 
     return resume;
   }
@@ -169,10 +164,6 @@ export class ResumeService {
   async remove(userId: string, id: string) {
     await Promise.all([
       // Remove cached keys
-      // this.redis.del(`user:${userId}:resumes`),
-      // this.redis.del(`user:${userId}:resume:${id}`),
-
-      // Remove files in storage, and their cached keys
       this.storageService.deleteObject(userId, "resumes", id),
       this.storageService.deleteObject(userId, "previews", id),
     ]);

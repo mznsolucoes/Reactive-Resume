@@ -58,7 +58,7 @@ export const LoginPage = () => {
 
       <div className="space-y-1.5">
         <h2 className="text-2xl font-semibold tracking-tight">{t`Sign in to your account`}</h2>
-        <h6 className={cn(emailAuthDisabled && "hidden")}>
+        <h6 className={cn(emailAuthDisabled)}>
           <span className="opacity-75">{t`Don't have an account?`}</span>
           <Button asChild variant="link" className="px-1.5">
             <Link to="/auth/register">
@@ -69,7 +69,7 @@ export const LoginPage = () => {
         </h6>
       </div>
 
-      <div className={cn(emailAuthDisabled && "hidden")}>
+      <div className={cn(emailAuthDisabled)}>
         <Form {...form}>
           <form
             ref={formRef}

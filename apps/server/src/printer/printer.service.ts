@@ -54,7 +54,7 @@ export class PrinterService {
       retries: 3,
       randomize: true,
       onRetry: (_, attempt) => {
-        this.logger.log(`Retrying to print resume #${resume.id}, attempt #${attempt}`);
+        this.logger.log(`Retrying to print resume #${resume.title}, attempt #${attempt}`);
       },
     });
 
@@ -74,7 +74,7 @@ export class PrinterService {
       randomize: true,
       onRetry: (_, attempt) => {
         this.logger.log(
-          `Retrying to generate preview of resume #${resume.id}, attempt #${attempt}`,
+          `Retrying to generate preview of resume #${resume.title}, attempt #${attempt}`,
         );
       },
     });
